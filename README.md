@@ -40,7 +40,7 @@ String iTunes_Playlist "Playlist [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/no
 String iTunes_Player_State "Player State [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_player_state.js)]" }
 
 Switch playlist_update "Playlisten Updaten" { expire="5s,command=OFF" }
-Number playlist_selection "Playlist Selection"
+Number playlist_selection "Playlist Selection" { expire="5s,command=0" }
 Dimmer Volume_Main "Main Volume [%s]"
 Dimmer Volume_Office "Volume Office [%s]"
 Switch Mute_Item "Mute"
@@ -64,8 +64,6 @@ when
   Item playlist_selection received update
 then
   if (playlist_selection.state =! 0) executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "playlist " + playlist_selection.state)
-  Thread::sleep(5000) // 5 Sekunden
-  playlist_selection.sendCommand(0)
 end
 ```
 
