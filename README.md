@@ -2,17 +2,18 @@
 
 ## Requirements
 
-MacOS with iTunes
-itunes-api - https://github.com/eiGelbGeek/itunes-api
-openhab2
-  -> Javascript Transformation
-  -> HTTP Binding
-  -> Expire Binding
-JQ - https://github.com/stedolan/jq
-  -> sudo apt-get install jq
+* MacOS with iTunes
+* itunes-api - https://github.com/eiGelbGeek/itunes-api
+* openhab2
+*  -> Javascript Transformation
+*  -> HTTP Binding
+*  -> Expire Binding
+* JQ - https://github.com/stedolan/jq
+*  -> sudo apt-get install jq
 
 ### Sitemap
 
+```js
 Webview url="/static/itunes_cover.html" height=8
 
 Text item=iTunes_Artist label="Artist [%s]"
@@ -28,9 +29,10 @@ Slider item=Volume_Office label="Volume Office"
 Switch item=Mute_Item label="Mute"
 Selection item=Shuffle_Item label="Shuffle" mappings=[0="Off", 1="Songs", 2="Albums", 3="Groupings"]
 Selection item=Repeat_Item label="Repeat" mappings=[0="Off", 1="One", 2="All"]
-
+```
 ### items
 
+```js
 String iTunes_Artist "Artist [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_artist.js)]" }
 String iTunes_Title "Titel [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_title.js)]" }
 String iTunes_Album "Album [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_album.js)]" }
@@ -44,7 +46,7 @@ Dimmer Volume_Office "Volume Office [%s]"
 Switch Mute_Item "Mute"
 Number Shuffle_Item
 Number Repeat_Item
-
+```
 ### Rule
 
 ```js
