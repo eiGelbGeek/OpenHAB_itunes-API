@@ -11,6 +11,23 @@
 * JQ - https://github.com/stedolan/jq
 *  -> sudo apt-get install jq
 
+### Installation
+
+Copy all files to Openhab2 based on folder structure!
+
+Create all necessary items, rules and the sitemap.
+
+Complete the configuration of the two bash scripts.
+
+* -> sudo chown openhab:openhab /etc/openhab2/scripts/\*.sh
+* -> sudo chmod +u+x /etc/openhab2/scripts/\*.sh
+* -> sudo chown openhab:openhab /etc/openhab2/transform/\*.js
+* -> sudo chown openhab:openhab /etc/openhab2/html/\*.html
+
+Before you update the playlists, make a back-up!
+
+I've tested the script several times, but I'm not responsible for data loss!
+
 ### Sitemap
 
 ```js
