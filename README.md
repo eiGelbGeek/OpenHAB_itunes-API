@@ -1,18 +1,57 @@
 # OpenHAB integration of itunes-API
-https://github.com/eiGelbGeek/itunes-api
 
+## Requirements
 
-## Sitemap
+MacOS with iTunes
+itunes-api - https://github.com/eiGelbGeek/itunes-api
+openhab2
+  -> Javascript Transformation
+  -> HTTP Binding
+  -> Expire Binding
+JQ - https://github.com/stedolan/jq
+  -> sudo apt-get install jq
 
-Cover -> Webview url="/static/itunes_cover.html" height=8
+### Sitemap
 
-## Rule
+Webview url="/static/itunes_cover.html" height=8
+
+Text item=iTunes_Artist label="Artist [%s]"
+Text item=iTunes_Title label="Titel [%s]"
+Text item=iTunes_Album label="Album [%s]"
+Text item=iTunes_Playlist label="Album [%s]"
+Text item=iTunes_Player_State label="Player State [%s]"
+
+Switch item=playlist_update label="Playlisten Updaten"
+Selection item=playlist_selection label="Playliste" icon="playlist" mappings=[0="Playlisten erst Updaten"]
+Slider item=Volume_Main label="Main Volume"
+Slider item=Volume_Office label="Volume Office"
+Switch item=Mute_Item label="Mute"
+Selection item=Shuffle_Item label="Shuffle" mappings=[0="Off", 1="Songs", 2="Albums", 3="Groupings"]
+Selection item=Repeat_Item label="Repeat" mappings=[0="Off", 1="One", 2="All"]
+
+### items
+
+String iTunes_Artist "Artist [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_artist.js)]" }
+String iTunes_Title "Titel [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_title.js)]" }
+String iTunes_Album "Album [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_album.js)]" }
+String iTunes_Playlist "Playlist [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_playlist.js)]" }
+String iTunes_Player_State "Player State [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_player_state.js)]" }
+
+Switch playlist_update "Playlisten Updaten" { expire="5s,command=OFF" }
+Number playlist_selection "Playlist Selection"
+Dimmer Volume_Main "Main Volume [%s]"
+Dimmer Volume_Office "Volume Office [%s]"
+Switch Mute_Item "Mute"
+Number Shuffle_Item
+Number Repeat_Item
+
+### Rule
 
 ```js
 rule"Update Playlist from iTunes"
 when
-//NUMBER ITEM
-  Item playlist_update received update
+//SWITCH ITEM
+  Item playlist_update changed from OFF to ON
 then
   executeCommandLine("sudo /etc/openhab2/scripts/oh_refresh_playlist_itunes-api.sh")
 end
