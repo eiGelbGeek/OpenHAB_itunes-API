@@ -52,7 +52,6 @@ Number Repeat_Item
 ```js
 rule"Update Playlist from iTunes"
 when
-//SWITCH ITEM
   Item playlist_update changed from OFF to ON
 then
   executeCommandLine("sudo /etc/openhab2/scripts/oh_refresh_playlist_itunes-api.sh")
@@ -62,7 +61,6 @@ end
 ```js
 rule"Play Playlist"
 when
-//NUMBER ITEM
   Item playlist_selection received update
 then
   if (playlist_selection.state =! 0) executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "playlist " + playlist_selection.state)
@@ -74,7 +72,6 @@ end
 ```js
 rule"MAIN Volume"
 when
-  //DIMMER ITEM
   Item Volume_Main received update
 then
   executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "volume " + Volume_Main.state + " Computer")
@@ -84,7 +81,6 @@ end
 ```js
 rule"Volume Office"
 when
-//DIMMER ITEM
   Item Volume_Office received update
 then
   executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "volume "+ Volume_Office.state + " ID_FROM_AIRPLAY_DEVICE")
@@ -94,7 +90,6 @@ end
 ```js
 rule"Volume Mute"
 when
-//SWITCH ITEM
   Item Mute_Item received update
 then
   if (Mute_Item.state == ON){
@@ -109,7 +104,6 @@ end
 ```js
 rule"Shuffle"
 when
-//NUMBER ITEM
   Item Shuffle_Item received update
 then
   if (Shuffle_Item.state == 0) executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "shuffle " + "off")
@@ -122,7 +116,6 @@ end
 ```js
 rule"Repeat"
 when
-//NUMBER ITEM
   Item Repeat_Item received update
 then
   if (Repeat_Item.state == 0) executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "repeat "+ "off")
