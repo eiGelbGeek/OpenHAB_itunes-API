@@ -43,14 +43,16 @@ Text item=iTunes_Player_State label="Player State [%s]"
 
 Switch item=playlist_update label="Playlisten Updaten"
 Selection item=playlist_selection label="Playliste" icon="playlist" mappings=[0="Playlisten erst Updaten"]
+Switch item=Airplay_Office label="Airplay Office"
+Switch item=Airplay_Office_Status label="Airplay Office Status"
 Slider item=Volume_Main label="Main Volume"
 Slider item=Volume_Office label="Volume Office"
-Switch item=iTunes_Play "Play"
-Switch item=iTunes_PlayPause "Play/Pause"
-Switch item=iTunes_Pause "Pause"
-Switch item=iTunes_Stop "Stop"
-Switch item=iTunes_Previous "Previous"
-Switch item=iTunes_Next "Next"
+Switch item=iTunes_Play label="Play"
+Switch item=iTunes_PlayPause label="Play/Pause"
+Switch item=iTunes_Pause label="Pause"
+Switch item=iTunes_Stop label="Stop"
+Switch item=iTunes_Previous label="Previous"
+Switch item=iTunes_Next label="Next"
 Switch item=iTunes_Mute label="Mute"
 Selection item=Shuffle_Item label="Shuffle" mappings=[0="Off", 1="Songs", 2="Albums", 3="Groupings"]
 Selection item=Repeat_Item label="Repeat" mappings=[0="Off", 1="One", 2="All"]
@@ -66,6 +68,8 @@ String iTunes_Player_State "Player State [%s]"  { http="<[http://XXX.XXX.XXX.XXX
 
 Switch playlist_update "Playlisten Updaten" { expire="5s,command=OFF" }
 Number playlist_selection "Playlist Selection" { expire="5s,command=0" }
+Switch Airplay_Office "Airplay Office"
+Switch Airplay_Office_Status "Airplay Office Status"
 Dimmer Volume_Main "Main Volume [%s]"
 Dimmer Volume_Office "Volume Office [%s]"
 Switch iTunes_Play "Play" { expire="1s,command=OFF" }
@@ -95,6 +99,19 @@ when
   Item playlist_selection received update
 then
   if (playlist_selection.state =! 0) executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "playlist " + playlist_selection.state)
+end
+```
+
+```js
+rule"Airplay ON/OFF"
+when
+  Item Airplay_Office received update
+then
+  if (Airplay_Office.state = ON) {
+    executeCommandLine("/etc/openhab2/scripts/iTunes.sh " + "airplay_on_off " + "ID_FROM_AIRPLAY_DEVICE" + " on " + "Airplay_Office_Staus")
+  } else {
+    executeCommandLine("/etc/openhab2/scripts/iTunes.sh " + "airplay_on_off " + "ID_FROM_AIRPLAY_DEVICE" + " off " + "Airplay_Office_Staus")
+  }
 end
 ```
 
