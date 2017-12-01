@@ -45,7 +45,13 @@ Switch item=playlist_update label="Playlisten Updaten"
 Selection item=playlist_selection label="Playliste" icon="playlist" mappings=[0="Playlisten erst Updaten"]
 Slider item=Volume_Main label="Main Volume"
 Slider item=Volume_Office label="Volume Office"
-Switch item=Mute_Item label="Mute"
+Switch item=iTunes_Play "Play"
+Switch item=iTunes_PlayPause "Play/Pause"
+Switch item=iTunes_Pause "Pause"
+Switch item=iTunes_Stop "Stop"
+Switch item=iTunes_Previous "Previous"
+Switch item=iTunes_Next "Next"
+Switch item=iTunes_Mute label="Mute"
 Selection item=Shuffle_Item label="Shuffle" mappings=[0="Off", 1="Songs", 2="Albums", 3="Groupings"]
 Selection item=Repeat_Item label="Repeat" mappings=[0="Off", 1="One", 2="All"]
 ```
@@ -62,7 +68,13 @@ Switch playlist_update "Playlisten Updaten" { expire="5s,command=OFF" }
 Number playlist_selection "Playlist Selection" { expire="5s,command=0" }
 Dimmer Volume_Main "Main Volume [%s]"
 Dimmer Volume_Office "Volume Office [%s]"
-Switch Mute_Item "Mute"
+Switch iTunes_Play "Play" { expire="1s,command=OFF" }
+Switch iTunes_PlayPause "Play/Pause"
+Switch iTunes_Pause "Pause" { expire="1s,command=OFF" }
+Switch iTunes_Stop "Stop" { expire="1s,command=OFF" }
+Switch iTunes_Previous "Previous" { expire="1s,command=OFF" }
+Switch iTunes_Next "Next" { expire="1s,command=OFF" }
+Switch iTunes_Mute "Mute"
 Number Shuffle_Item
 Number Repeat_Item
 ```
@@ -105,11 +117,65 @@ end
 ```
 
 ```js
-rule"Volume Mute"
+rule"Play"
 when
-  Item Mute_Item received update
+  Item iTunes_Play changed from OFF to ON
 then
-  if (Mute_Item.state == ON){
+    executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "play")
+end
+```
+
+```js
+rule"Toogle Play/Pause"
+when
+  Item iTunes_PlayPause changed
+then
+    executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "playpause")
+end
+```
+
+```js
+rule"Pause"
+when
+  Item iTunes_Pause changed from OFF to ON
+then
+    executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "pause")
+end
+```
+
+```js
+rule"Stop"
+when
+  Item iTunes_Stop changed from OFF to ON
+then
+    executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "stop")
+end
+```
+
+```js
+rule"Previous"
+when
+  Item iTunes_Previous changed from OFF to ON
+then
+    executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "previous")
+end
+```
+
+```js
+rule"Next"
+when
+  Item iTunes_Next changed from OFF to ON
+then
+    executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "next")
+end
+```
+
+```js
+rule"Mute"
+when
+  Item iTunes_Mute received update
+then
+  if (iTunes_Mute.state == ON){
     executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "mute " + "true")
   }
   else{
