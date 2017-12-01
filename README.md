@@ -4,7 +4,7 @@ https://github.com/eiGelbGeek/itunes-api
 
 ## Sitemap
 
-Cover -> Webview url="/static/iTunesCover.html" height=8
+Cover -> Webview url="/static/itunes_cover.html" height=8
 
 ## Rule
 
