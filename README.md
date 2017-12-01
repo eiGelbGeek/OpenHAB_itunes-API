@@ -14,8 +14,11 @@
 ### Installation
 
 Copy all files to Openhab2 based on folder structure!
+
 Create all necessary items, rules and the sitemap.
+
 Fill in the IP address in the HTML file
+
 Complete the configuration of the two bash scripts.
 
 * -> sudo chown openhab:openhab /etc/openhab2/scripts/\*.sh
@@ -24,6 +27,7 @@ Complete the configuration of the two bash scripts.
 * -> sudo chown openhab:openhab /etc/openhab2/html/\*.html
 
 Before you update the playlists, make a back-up!
+
 I've tested the script several times, but I'm not responsible for data loss!
 
 ### Sitemap
