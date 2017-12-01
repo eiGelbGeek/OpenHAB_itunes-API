@@ -2,7 +2,11 @@
 https://github.com/eiGelbGeek/itunes-api
 
 
-## Example
+## Sitemap
+
+Cover -> Webview url="/static/iTunesCover.html" height=8
+
+## Rule
 
 ```js
 rule"Update Playlist from iTunes"
