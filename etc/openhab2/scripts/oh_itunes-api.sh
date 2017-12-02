@@ -57,20 +57,36 @@ case $1 in
         #$2 = off/one/all
         curl -X PUT -d "mode=$2" http://$itunesAPI_URL:$itunesAPI_Port/repeat
         ;;
-    airplay_on_off)
-        #$2 = Airplay_ID - $3 = on/off - $4 = Openhab Switch Item für Airplay Device Status
+    airplay_on)
+        #$2 = Airplay_ID - $3 = Openhab Switch Item für Airplay Device - $4 = Openhab Switch Item für Airplay Device Status
         if AP_Selected="$(curl -s GET --header "Accept: application/json" "http://$itunesAPI_URL:$itunesAPI_Port/airplay_devices/$2" | jq -r '.selected' 2>/dev/null)";
         then
           if $AP_Selected == "true";
           then
             curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://$openhab_url:$openhab_port/rest/items/$4"
           else
-            curl -X PUT http://$itunesAPI_URL:$itunesAPI_Port/airplay_devices/$2/$3
+            curl -X PUT http://$itunesAPI_URL:$itunesAPI_Port/airplay_devices/$2/on
             curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://$openhab_url:$openhab_port/rest/items/$4"
           fi
         else
           curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://$openhab_url:$openhab_port/rest/items/$4"
+          curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://$openhab_url:$openhab_port/rest/items/$3"
         	exit 1
+        fi
+        ;;
+    airplay_off)
+        #$2 = Airplay_ID - $3 = Openhab Switch Item für Airplay Device Status
+        if AP_Selected="$(curl -s GET --header "Accept: application/json" "http://$itunesAPI_URL:$itunesAPI_Port/airplay_devices/$2" | jq -r '.selected' 2>/dev/null)";
+        then
+          if $AP_Selected == "true";
+          then
+            curl -X PUT http://$itunesAPI_URL:$itunesAPI_Port/airplay_devices/$2/off
+            curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://$openhab_url:$openhab_port/rest/items/$3"
+          else
+            curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://$openhab_url:$openhab_port/rest/items/$3"
+          fi
+          curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://$openhab_url:$openhab_port/rest/items/$3"
+          exit 1
         fi
         ;;
     playlist)
