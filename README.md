@@ -103,14 +103,15 @@ end
 ```
 
 ```js
+
 rule"Airplay ON/OFF"
 when
   Item Airplay_Office received update
 then
   if (Airplay_Office.state = ON) {
-    executeCommandLine("/etc/openhab2/scripts/iTunes.sh " + "airplay_on_off " + "ID_FROM_AIRPLAY_DEVICE" + " on " + "Airplay_Office_Staus")
+    executeCommandLine("/etc/openhab2/scripts/iTunes.sh " + "airplay_on " + "ID_FROM_AIRPLAY_DEVICE" + " Airplay_Office" + " Airplay_Office_Staus")
   } else {
-    executeCommandLine("/etc/openhab2/scripts/iTunes.sh " + "airplay_on_off " + "ID_FROM_AIRPLAY_DEVICE" + " off " + "Airplay_Office_Staus")
+    executeCommandLine("/etc/openhab2/scripts/iTunes.sh " + "airplay_off " + "ID_FROM_AIRPLAY_DEVICE" + " Airplay_Office_Staus")
   }
 end
 ```
