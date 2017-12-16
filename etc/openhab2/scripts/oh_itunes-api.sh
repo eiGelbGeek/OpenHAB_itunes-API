@@ -2,7 +2,7 @@
 
 ################################################################################
 #BashScript zur Steuerung der iTunes-Api in Openhab - Version 0.3 by eiGelbGeek#
-#https://github.com/maddox/itunes-api by maddox                                #
+#https://github.com/eiGelbGeek/itunes-api                                      #
 ################################################################################
 
 itunesAPI_URL="XXX.XXX.XXX.XXX"
@@ -37,6 +37,11 @@ case $1 in
         curl -X PUT http://$itunesAPI_URL:$itunesAPI_Port/pause
         ;;
     stop)
+        curl -X PUT http://$itunesAPI_URL:$itunesAPI_Port/stop
+        ;;
+    stop_on_pause)
+        #Needed when transferring metadata with EventScripts!
+        curl -X PUT http://$itunesAPI_URL:$itunesAPI_Port/play
         curl -X PUT http://$itunesAPI_URL:$itunesAPI_Port/stop
         ;;
     previous)
@@ -94,7 +99,16 @@ case $1 in
         playlist_ids=( one two three )
         curl -X PUT http://$itunesAPI_URL:$itunesAPI_Port/playlists/${playlist_ids[$2]}/play
         ;;
-     *)
+    webradio)
+        curl -X PUT http://$itunesAPI_URL:$itunesAPI_Port/webradio/$2
+        ;;
+    addMedia)
+        curl -X PUT http://$itunesAPI_URL:$itunesAPI_Port/addMedia/$2
+        ;;
+    system)
+        curl -X PUT http://$itunesAPI_URL:$itunesAPI_Port/system/$2
+        ;;
+    *)
         echo "Kommando nicht vorhanden!"
         ;;
 esac
