@@ -42,7 +42,9 @@ Text item=iTunes_Playlist label="Album [%s]"
 Text item=iTunes_Player_State label="Player State [%s]"
 
 Switch item=playlist_update label="Playlisten Updaten"
-Selection item=playlist_selection label="Playliste" icon="playlist" mappings=[0="Playlisten erst Updaten"]
+Selection item=playlist_selection label="Playliste" icon="playlist" mappings=[0="Playlisten Updaten"]
+Switch item=webradio_delete "Delete Webradiostations from Library"
+Selection item=webradio_selection label="Webradio" icon="playlist" mappings=[0="Choose Webradiostation", 1="YourFavoriteSation-1", 2="YourFavoriteSation-2", 3="YourFavoriteSation-3", 4="YourFavoriteSation-4"]
 Switch item=Airplay_Office label="Airplay Office"
 Switch item=Airplay_Office_Status label="Airplay Office Status"
 Slider item=Volume_Main label="Main Volume"
@@ -60,14 +62,16 @@ Selection item=Repeat_Item label="Repeat" mappings=[0="Off", 1="One", 2="All"]
 ### items
 
 ```js
-String iTunes_Artist "Artist [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_artist.js)]" }
-String iTunes_Title "Titel [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_title.js)]" }
-String iTunes_Album "Album [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_album.js)]" }
-String iTunes_Playlist "Playlist [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_playlist.js)]" }
-String iTunes_Player_State "Player State [%s]"  { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_player_state.js)]" }
+String iTunes_Artist "Artist [%s]" { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_artist.js)]" }
+String iTunes_Title "Titel [%s]" { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_title.js)]" }
+String iTunes_Album "Album [%s]" { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_album.js)]" }
+String iTunes_Playlist "Playlist [%s]" { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_playlist.js)]" }
+String iTunes_Player_State "Player State [%s]" { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_player_state.js)]" }
 
 Switch playlist_update "Playlisten Updaten" { expire="5s,command=OFF" }
-Number playlist_selection "Playlist Selection" { expire="5s,command=0" }
+Number playlist_selection "Play Playlist" { expire="5s,command=0" }
+Number webradio_selection "Play Webradiostation" { expire="5s,command=0" }
+Switch webradio_delete "Delete Webradiostations from Library" { expire="5s,command=OFF" }
 Switch Airplay_Office "Airplay Office"
 Switch Airplay_Office_Status "Airplay Office Status"
 Dimmer Volume_Main "Main Volume [%s]"
@@ -81,6 +85,7 @@ Switch iTunes_Next "Next" { expire="1s,command=OFF" }
 Switch iTunes_Mute "Mute"
 Number Shuffle_Item
 Number Repeat_Item
+
 ```
 ### Rule
 
@@ -99,6 +104,24 @@ when
   Item playlist_selection received update
 then
   if (playlist_selection.state =! 0) executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "playlist " + playlist_selection.state)
+end
+```
+
+```js
+rule"Delete Webradiostations from Library"
+when
+  Item webradio_delete changed from OFF to ON
+then
+  executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "webradio " + "delete")
+end
+```
+
+```js
+rule"Play Webradiostation"
+when
+  Item webradio_selection received update
+then
+  if (webradio_selection.state =! 0) executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "webradio " + webradio_selection.state)
 end
 ```
 
