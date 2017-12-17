@@ -58,9 +58,41 @@ case $1 in
         #$2 = off/songs/albums/groupings
         curl -X PUT -d "mode=$2" http://$itunesAPI_URL:$itunesAPI_Port/shuffle
         ;;
+    get_set_shuffle)
+        #$2 = Openhab Number Item für Shuffle
+        if shuffle="$(curl -s GET --header "Accept: application/json" "http://$itunesAPI_URL:$itunesAPI_Port/now_playing" | jq -r '.shuffle' 2>/dev/null)";
+          then
+            if [ "$shuffle" == "off" ]; then
+              curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "0" "http://$openhab_url:$openhab_port/rest/items/$2"
+            elif [ "$shuffle" == "songs" ]; then
+              curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "1" "http://$openhab_url:$openhab_port/rest/items/$2"
+            elif [ "$shuffle" == "albums" ]; then
+              curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "2" "http://$openhab_url:$openhab_port/rest/items/$2"
+            elif [ "$shuffle" == "groupings" ]; then
+              curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "3" "http://$openhab_url:$openhab_port/rest/items/$2"
+            fi
+        else
+          exit 1
+        fi
+        ;;
     repeat)
         #$2 = off/one/all
         curl -X PUT -d "mode=$2" http://$itunesAPI_URL:$itunesAPI_Port/repeat
+        ;;
+    get_set_repeat)
+        #$2 = Openhab Number Item für Repeat
+        if repeat="$(curl -s GET --header "Accept: application/json" "http://$itunesAPI_URL:$itunesAPI_Port/now_playing" | jq -r '.repeat' 2>/dev/null)";
+          then
+            if [ "$repeat" == "off" ]; then
+              curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "0" "http://$openhab_url:$openhab_port/rest/items/$2"
+            elif [ "$repeat" == "one" ]; then
+              curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "1" "http://$openhab_url:$openhab_port/rest/items/$2"
+            elif [ "$repeat" == "all" ]; then
+              curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "2" "http://$openhab_url:$openhab_port/rest/items/$2"
+            fi
+        else
+          exit 1
+        fi
         ;;
     airplay_on)
         #$2 = Airplay_ID - $3 = Openhab Switch Item für Airplay Device - $4 = Openhab Switch Item für Airplay Device Status
