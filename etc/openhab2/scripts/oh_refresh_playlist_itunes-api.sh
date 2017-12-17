@@ -19,8 +19,8 @@ oh_playlist_item="playlist_selection"
 > /tmp/itunes_playlist_ids.txt
 #Playlisten Namen abfragen und in Temporäre Datei schreiben!
 curl -s GET --header "Accept: application/json" "http://$itunesAPI_URL:$itunesAPI_Port/playlists" | jq '.playlists[] | .name' > /tmp/itunes_playlist_names.txt
-#Zeile 1-9 löschen! (iTunes Standard Playlisten!!)
-sed -i 1,9D /tmp/itunes_playlist_names.txt
+#Zeile 1-7 löschen! (iTunes Standard Playlisten!!)
+sed -i 1,7D /tmp/itunes_playlist_names.txt
 #Erforderliche Formatierung für Sitemap hinzufügen!
 cp /tmp/itunes_playlist_names.txt /tmp/itunes_playlist_names_tmp.txt
 awk '{print NR"="$0", "}' /tmp/itunes_playlist_names_tmp.txt > /tmp/itunes_playlist_names.txt
@@ -42,8 +42,8 @@ chown openhab:openhab $oh_sitemap_name
 
 #Playlisten IDs abfragen und in Temporäre Datei schreiben!
 curl -s GET --header "Accept: application/json" "http://$itunesAPI_URL:$itunesAPI_Port/playlists" | jq -r '.playlists[] | .id' > /tmp/itunes_playlist_ids.txt
-#Zeile 1-9 löschen! (iTunes Standard Playlisten!!)
-sed -i 1,9D /tmp/itunes_playlist_ids.txt
+#Zeile 1-7 löschen! (iTunes Standard Playlisten!!)
+sed -i 1,7D /tmp/itunes_playlist_ids.txt
 #Datei vervollständigen!
 sed -i '1 i\playlist_ids=( dummy' /tmp/itunes_playlist_ids.txt
 echo ")" >> /tmp/itunes_playlist_ids.txt
