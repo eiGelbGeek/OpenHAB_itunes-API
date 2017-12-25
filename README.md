@@ -238,5 +238,5 @@ end
 ```
 
 ```
-  Playlisten Updaten -> sudo bash /etc/openhab2/script/oh_refresh_playlist_itunes-api.sh
+  Playlisten Updaten -> sudo bash /etc/openhab2/scripts/oh_refresh_playlist_itunes-api.sh
 ```
