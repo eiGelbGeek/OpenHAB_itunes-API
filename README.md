@@ -41,7 +41,6 @@ Text item=iTunes_Album label="Album [%s]"
 Text item=iTunes_Playlist label="Album [%s]"
 Text item=iTunes_Player_State label="Player State [%s]"
 
-Switch item=playlist_update label="Playlisten Updaten"
 Selection item=playlist_selection label="Playliste" icon="playlist" mappings=[0="Playlisten Updaten"]
 Switch item=webradio_delete "Delete Webradiostations from Library"
 Selection item=webradio_selection label="Webradio" icon="playlist" mappings=[0="Choose Webradiostation", 1="YourFavoriteSation-1", 2="YourFavoriteSation-2", 3="YourFavoriteSation-3", 4="YourFavoriteSation-4"]
@@ -68,7 +67,6 @@ String iTunes_Album "Album [%s]" { http="<[http://XXX.XXX.XXX.XXX:8181/now_playi
 String iTunes_Playlist "Playlist [%s]" { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_playlist.js)]" }
 String iTunes_Player_State "Player State [%s]" { http="<[http://XXX.XXX.XXX.XXX:8181/now_playing:6000:JS(itunes_player_state.js)]" }
 
-Switch playlist_update "Playlisten Updaten" { expire="5s,command=OFF" }
 Number playlist_selection "Play Playlist" { expire="5s,command=0" }
 Number webradio_selection "Play Webradiostation" { expire="5s,command=0" }
 Switch webradio_delete "Delete Webradiostations from Library" { expire="5s,command=OFF" }
@@ -88,15 +86,6 @@ Number Repeat_Item
 
 ```
 ### Rule
-
-```js
-rule"Update Playlist from iTunes"
-when
-  Item playlist_update changed from OFF to ON
-then
-  executeCommandLine("sudo /etc/openhab2/scripts/oh_refresh_playlist_itunes-api.sh")
-end
-```
 
 ```js
 rule"Play Playlist"
@@ -246,4 +235,8 @@ then
   if (Repeat_Item.state == 1) executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "repeat "+ "one")
   if (Repeat_Item.state == 2) executeCommandLine("/etc/openhab2/scripts/oh_itunes-api.sh " + "repeat "+ "all")
 end
+```
+
+```
+  Playlisten Updaten -> sudo bash /etc/openhab2/script/oh_refresh_playlist_itunes-api.sh
 ```
